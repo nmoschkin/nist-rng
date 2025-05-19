@@ -27,10 +27,6 @@ This library supports event-driven updates, asynchronous initialization, and cus
 
 ## Getting Started
 
-### Install
-
-This is a source-only library. You can add the `.cs` files to your project or publish it as a NuGet package yourself.
-
 ---
 
 ### Example Usage
