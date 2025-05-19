@@ -310,9 +310,9 @@ namespace NistRNG
             {
                 this.rng.Next();
             }
-            if ((beads[currentBead] & 2) == 2)
+            if ((beads[currentBead] & 1) == 1)
             {
-                beads[currentBead] = Discombobulate(beads[currentBead]);
+                beads[currentBead] = Endian(beads[currentBead]);
             }
             beads[currentBead] = (byte)((beads[currentBead] << 1) ^ 0xff);
             currentBead++;
@@ -322,14 +322,14 @@ namespace NistRNG
             }
         }
 
-        private byte Discombobulate(byte input)
+        private byte Endian(byte input)
         {
-            var result = (byte)0;
-            var p = 1;
-            for (int i = 7; i >= 0; i--)
+            byte result = 0;
+            for (int i = 0; i < 8; i++)
             {
-                result = (byte)(result | ((input >> i) & p));
-                p *= 2;
+                result <<= 1;
+                result |= (byte)(input & 1);
+                input >>= 1;
             }
             return result;
         }
