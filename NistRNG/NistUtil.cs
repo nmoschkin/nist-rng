@@ -112,15 +112,31 @@ namespace NistRNG
                     var jbit = (bitsource & 0x7);
                     if (jbit == 0) break;
                     finalseed = (finalseed << jbit) ^ jostle;
+
+                    var high = jostle | 0x80;
+
                     bitsource >>= 1;
+
                     if ((bitsource & 0x3) != 0 && (bitsource & 0x3) != 3)
                     {
                         bitsource = ((~bitsource) << (bitsource & 0x3)) ^ (bitsource ^ ((~bitsource) >> (bitsource & 0x3)));
                     }
-                }                
-                while (finalseed < 0)
+                    else if (bitsource > high)
+                    {
+                        bitsource = ((~bitsource) << (bitsource & 0xd)) ^ (bitsource ^ ((~bitsource) >> (bitsource & 0x5))) + (jostle + i);
+                    }                    
+                }
+
+                if (finalseed < 0)
                 {
-                    finalseed = (finalseed << 1) ^ (jostle | 1);
+                    while (finalseed < 0)
+                    {
+                        finalseed = (finalseed << 1) ^ (jostle | 1);
+                    }
+                }
+                foreach (var part in refparts)
+                {
+                    finalseed ^= part;
                 }
                 refparts.Add(finalseed);
             }
@@ -128,6 +144,5 @@ namespace NistRNG
             intermediateValues = refparts;
             return new System.Random(finalseed);
         }
-
     }
 }
