@@ -25,8 +25,6 @@ This library supports event-driven updates, asynchronous initialization, and cus
 | Digit Uniformity      | Uniform        | No significant bias in digit distribution              |
 | Monte Carlo π Estimate| 3.15776        | Close approximation to π (ideal: ≈ 3.14159)   
 
-## Getting Started
-
 ---
 
 ### Example Usage
