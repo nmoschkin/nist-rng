@@ -310,7 +310,7 @@ namespace NistRNG
             {
                 this.rng.Next();
             }
-            beads[currentBead] = (byte)(beads[currentBead] ^ 0xff);
+            beads[currentBead] = (byte)((beads[currentBead] << 1) ^ 0xff);
             currentBead++;
             if (currentBead >= beads.Length)
             {
