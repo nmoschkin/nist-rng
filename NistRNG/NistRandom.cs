@@ -51,7 +51,7 @@ namespace NistRNG
         /// <param name="randomFactory">Optional alternative <see cref="IRandomFactory"/> implementation to use.</param>
         /// <param name="sync">Optional <see cref="SynchronizationContext"/>. If this is not null, then <see cref="BeaconPulse"/> events will be invoked from the <see cref="SynchronizationContext"/>.</param>
         /// <returns>A new instance of <see cref="NistRandom"/></returns>
-        public static async Task<NistRandom> CreateAsync(IRandomFactory randomFactory, SynchronizationContext sync = null)
+        public static async Task<NistRandom> CreateAsync(IRandomFactory randomFactory = null, SynchronizationContext sync = null)
         {
             var inst = new NistRandom(sync)
             {
@@ -302,7 +302,7 @@ namespace NistRNG
             lock (_lock)
             {
                 currentPulse = payload.Pulse;
-                rng = NistUtil.Instance.CreateRandomFromPulse(currentPulse.OutputValue, out _);
+                rng = randomFactory.CreateRandomFromPulse(currentPulse.OutputValue, out _);
             }
 
             PublishNextPulse();
