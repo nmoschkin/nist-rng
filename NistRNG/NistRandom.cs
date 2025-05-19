@@ -380,7 +380,7 @@ namespace NistRNG
         private void PublishNextPulse()
         {
 #if DEBUG
-            Console.WriteLine($"Beacon Pulse:\r\n{currentPulse?.OutputValue}");
+            Console.WriteLine($"Beacon Pulse:\r\n{currentPulse?.OutputValue}\r\n");
 #endif
             if (sync != null)
             {
