@@ -44,6 +44,8 @@ namespace NistRNG
         private Pulse currentPulse;
         private bool disposedValue;
         private IRandomFactory randomFactory;
+        private byte[] beads;
+        private int currentBead = -1;
 
         /// <summary>
         /// Asynchronously create and initialize a new instance of <see cref="NistRandom"/>.
@@ -132,6 +134,7 @@ namespace NistRNG
         {
             lock (_lock)
             {
+                NextBead();
                 return rng?.Next() ?? base.Next();
             }
         }
@@ -141,6 +144,7 @@ namespace NistRNG
         {
             lock (_lock)
             {
+                NextBead();
                 return rng?.Next(maxValue) ?? base.Next(maxValue);
             }
         }
@@ -150,6 +154,7 @@ namespace NistRNG
         {
             lock (_lock)
             {
+                NextBead();
                 return rng?.Next(minValue, maxValue) ?? base.Next(minValue, maxValue);
             }            
         }
@@ -161,6 +166,7 @@ namespace NistRNG
             {
                 if (rng != null)
                 {
+                    NextBead();
                     rng.NextBytes(buffer);
                 }
                 else
@@ -177,6 +183,7 @@ namespace NistRNG
             {
                 if (rng != null)
                 {
+                    NextBead();
                     rng.NextBytes(buffer);
                 }
                 else
@@ -191,6 +198,7 @@ namespace NistRNG
         {    
             lock (_lock)
             {
+                NextBead();
                 return rng?.NextDouble() ?? base.NextDouble();
             }            
         }
@@ -200,6 +208,7 @@ namespace NistRNG
         {
             lock (_lock) 
             {
+                NextBead();
                 return rng?.NextInt64() ?? base.NextInt64();
             }
         }
@@ -208,7 +217,8 @@ namespace NistRNG
         public override long NextInt64(long maxValue)
         {
             lock (_lock)
-            { 
+            {
+                NextBead();
                 return rng?.NextInt64(maxValue) ?? base.NextInt64(maxValue); 
             }
         }
@@ -218,6 +228,7 @@ namespace NistRNG
         {
             lock (_lock)
             {
+                NextBead();
                 return rng?.NextInt64(minValue, maxValue) ?? base.NextInt64(minValue, maxValue);
             }
         }
@@ -227,6 +238,7 @@ namespace NistRNG
         {
             lock(_lock) 
             {
+                NextBead();
                 return rng?.NextSingle() ?? base.NextSingle();
             }
         }
@@ -249,6 +261,8 @@ namespace NistRNG
                 beaconWatcher = null;
                 token = CancellationToken.None;
                 tokenSource = null;
+                beads = null;
+                currentBead = -1;
                 res.SetResult(true);
                 return res.Task;
             }            
@@ -285,6 +299,22 @@ namespace NistRNG
                     res.SetResult(rng != null);
                 });
                 return res.Task;
+            }
+        }
+
+        private void NextBead()
+        {            
+            if (rng == null || currentBead < 0 || beads.Length == 0) return;
+            var val = beads[currentBead] & 0xf;
+            for (var i = 0; i < val; i++)
+            {
+                this.rng.Next();
+            }
+            beads[currentBead] = (byte)(beads[currentBead] ^ 0xff);
+            currentBead++;
+            if (currentBead >= beads.Length)
+            {
+                currentBead = 0;
             }
         }
 
@@ -333,7 +363,14 @@ namespace NistRNG
             lock (_lock)
             {
                 currentPulse = payload.Pulse;
-                rng = randomFactory.CreateRandomFromPulse(currentPulse.OutputValue, out _);
+                rng = randomFactory.CreateRandomFromPulse(currentPulse.OutputValue, out var beads);
+                List<byte> bytes = new List<byte>();
+                foreach (var bead in beads)
+                {
+                    bytes.AddRange(BitConverter.GetBytes(bead));
+                }
+                this.beads = [.. bytes];
+                this.currentBead = 0;
             }
 
             if (token.IsCancellationRequested) return;
