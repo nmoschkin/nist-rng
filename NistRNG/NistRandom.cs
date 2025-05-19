@@ -28,7 +28,7 @@ namespace NistRNG
     /// <summary>
     /// A <see cref="System.Random"/>-derived class that uses the NIST Randomness Beacon to periodically reseed from true entropy.
     /// </summary>
-    public class NistRandom : Random, IDisposable
+    public sealed class NistRandom : Random, IDisposable
     {
         private readonly object _lock = new();
         private readonly object _modeLock = new();
@@ -71,6 +71,9 @@ namespace NistRNG
             this.sync = sync;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the NIST-seeded <see cref="Random"/> has been created.
+        /// </summary>
         public bool IsReady
         {
             get
@@ -82,6 +85,9 @@ namespace NistRNG
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the NIST beacon is being actively polled.
+        /// </summary>
         public bool IsBeaconSentinelRunning
         {
             get
@@ -93,6 +99,9 @@ namespace NistRNG
             }
         }
 
+        /// <summary>
+        /// Gets the latest pull data from the last call to the NIST Randomness Beacon endpoint.
+        /// </summary>
         public Pulse LatestPulseData
         {
             get
@@ -104,6 +113,9 @@ namespace NistRNG
             }
         }
 
+        /// <summary>
+        /// Gets the timestamp of the last random generation.
+        /// </summary>
         public DateTime LastPulseTime
         {
             get
@@ -115,6 +127,7 @@ namespace NistRNG
             }
         }
 
+        /// <inheritdoc/>
         public override int Next()
         {
             lock (_lock)
@@ -123,6 +136,7 @@ namespace NistRNG
             }
         }
 
+        /// <inheritdoc/>
         public override int Next(int maxValue)
         {
             lock (_lock)
@@ -131,6 +145,7 @@ namespace NistRNG
             }
         }
 
+        /// <inheritdoc/>
         public override int Next(int minValue, int maxValue)
         {
             lock (_lock)
@@ -139,6 +154,7 @@ namespace NistRNG
             }            
         }
 
+        /// <inheritdoc/>
         public override void NextBytes(byte[] buffer)
         {
             lock (_lock)
@@ -154,6 +170,7 @@ namespace NistRNG
             }
         }
 
+        /// <inheritdoc/>
         public override void NextBytes(Span<byte> buffer)
         {
             lock (_lock)
@@ -169,6 +186,7 @@ namespace NistRNG
             }
         }
 
+        /// <inheritdoc/>
         public override double NextDouble()
         {    
             lock (_lock)
@@ -177,6 +195,7 @@ namespace NistRNG
             }            
         }
 
+        /// <inheritdoc/>
         public override long NextInt64()
         {
             lock (_lock) 
@@ -185,6 +204,7 @@ namespace NistRNG
             }
         }
 
+        /// <inheritdoc/>
         public override long NextInt64(long maxValue)
         {
             lock (_lock)
@@ -193,6 +213,7 @@ namespace NistRNG
             }
         }
 
+        /// <inheritdoc/>
         public override long NextInt64(long minValue, long maxValue)
         {
             lock (_lock)
@@ -201,6 +222,7 @@ namespace NistRNG
             }
         }
 
+        /// <inheritdoc/>
         public override float NextSingle()
         {
             lock(_lock) 
@@ -266,6 +288,11 @@ namespace NistRNG
             }
         }
 
+        /// <summary>
+        /// Thread method
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NullReferenceException"></exception>
         private async Task ThreadMethod()
         {
             const int wait = 100;
@@ -288,7 +315,7 @@ namespace NistRNG
                 {
                     acc = 0;
                     payload = await NistUtil.GetBeacon();
-                    if (payload == null) throw new ArgumentNullException(nameof(payload));
+                    if (payload == null) throw new NullReferenceException(nameof(payload));
 
                     if (token.IsCancellationRequested) return;
                     interval = payload.Pulse.Period;
@@ -297,6 +324,10 @@ namespace NistRNG
             }
         }
 
+        /// <summary>
+        /// Process the beacon payload and dispatch any events.
+        /// </summary>
+        /// <param name="payload"></param>
         private void ProcessPayload(NistBeaconPayload payload)
         {
             lock (_lock)
@@ -343,7 +374,7 @@ namespace NistRNG
             BeaconPulse?.Invoke(this, new BeaconPulseEventArgs(currentPulse, this));
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
