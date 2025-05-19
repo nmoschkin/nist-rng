@@ -124,19 +124,18 @@ namespace NistRNG
                     else if (bitsource > high)
                     {
                         bitsource = ((~bitsource) << (bitsource & 0xd)) ^ (bitsource ^ ((~bitsource) >> (bitsource & 0x5))) + (jostle + i);
-                    }                    
+                    }
                 }
-
                 if (finalseed < 0)
                 {
                     while (finalseed < 0)
                     {
-                        finalseed = (finalseed << 1) ^ (jostle | 1);
+                        finalseed = (finalseed << 1) ^ (jostle & ~1);
                     }
                 }
                 foreach (var part in refparts)
                 {
-                    finalseed ^= part;
+                    finalseed ^= part + (DateTime.Now.Nanosecond ^ (~DateTime.Now.Nanosecond | 0xa3));
                 }
                 refparts.Add(finalseed);
             }
