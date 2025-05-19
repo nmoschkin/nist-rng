@@ -317,8 +317,8 @@ namespace NistRNG
                     payload = await NistUtil.GetBeacon();
                     if (payload == null) throw new NullReferenceException(nameof(payload));
 
-                    if (token.IsCancellationRequested) return;
                     interval = payload.Pulse.Period;
+                    if (token.IsCancellationRequested) return;
                     ProcessPayload(payload);
                 }
             }
@@ -336,6 +336,7 @@ namespace NistRNG
                 rng = randomFactory.CreateRandomFromPulse(currentPulse.OutputValue, out _);
             }
 
+            if (token.IsCancellationRequested) return;
             PublishNextPulse();
         }
 
