@@ -6,7 +6,7 @@ This library supports event-driven updates, asynchronous initialization, and cus
 
 ---
 
-## 🌐 Why Use NistRNG?
+## Features
 
 - Reseeds periodically from **true entropy** published by the U.S. National Institute of Standards and Technology (NIST)
 - Functions just like `System.Random`
@@ -16,7 +16,7 @@ This library supports event-driven updates, asynchronous initialization, and cus
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Install
 
