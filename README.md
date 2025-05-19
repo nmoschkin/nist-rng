@@ -18,13 +18,12 @@ This library supports event-driven updates, asynchronous initialization, and cus
 
 ## NistRNG Test Results (Latest Sample: 100,000 integers)
 
-| Test Name             | Result         | Notes                                              |
-|----------------------|----------------|----------------------------------------------------|
-| Shannon Entropy      | 10.888 bits    | Very high entropy (max possible: 11.0 bits)       |
-| Chi-Square Test      | Passed         | Uniform distribution across 256 bins               |
-| Digit Uniformity     | Uniform        | No significant bias in leading digits              |
-| Monte Carlo π Estimate | 3.15776       | Close approximation to π (ideal: ≈ 3.14159)        |
-
+| Test Name             | Result         | Notes                                                  |
+|-----------------------|----------------|--------------------------------------------------------|
+| Shannon Entropy       | 7.9546 bits    | High entropy (max possible: 8.0 bits)                  |
+| Chi-Square Test       | Passed         | p-value = 0.644 — no significant deviation             |
+| Digit Uniformity      | Uniform        | No significant bias in digit distribution              |
+| Monte Carlo π Estimate| 3.15776        | Close approximation to π (ideal: ≈ 3.14159)   
 
 ## Getting Started
 
