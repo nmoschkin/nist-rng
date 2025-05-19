@@ -62,10 +62,6 @@ namespace NistRNG
             var seed1 = int.Parse(seed1txt, System.Globalization.NumberStyles.HexNumber);
             var rng = new System.Random(seed1);
 
-            var nib = byte.Parse(pulse.Substring(7, 1), System.Globalization.NumberStyles.HexNumber);
-
-            var rand1 = rng.Next(nib, (int)nib * nib);
-
             var cycletxt = pulse.Substring(8);
             var cycles = new List<int>();
 
