@@ -16,6 +16,16 @@ This library supports event-driven updates, asynchronous initialization, and cus
 
 ---
 
+## NistRandom Test Results (Latest Sample: 100,000 integers)
+
+| Test Name             | Result         | Notes                                              |
+|----------------------|----------------|----------------------------------------------------|
+| Shannon Entropy      | 10.888 bits    | Very high entropy (max possible: 11.0 bits)       |
+| Chi-Square Test      | Passed         | Uniform distribution across 256 bins               |
+| Digit Uniformity     | Uniform        | No significant bias in leading digits              |
+| Monte Carlo π Estimate | 3.15776       | Close approximation to π (ideal: ≈ 3.14159)        |
+
+
 ## Getting Started
 
 ### Install
