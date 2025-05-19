@@ -305,10 +305,14 @@ namespace NistRNG
         private void NextBead()
         {            
             if (rng == null || currentBead < 0 || beads.Length == 0) return;
-            var val = beads[currentBead] & 0xf;
+            var val = beads[currentBead] & 0x7;
             for (var i = 0; i < val; i++)
             {
                 this.rng.Next();
+            }
+            if ((beads[currentBead] & 2) == 2)
+            {
+                beads[currentBead] = Endian(beads[currentBead]);
             }
             beads[currentBead] = (byte)((beads[currentBead] << 1) ^ 0xff);
             currentBead++;
@@ -316,6 +320,18 @@ namespace NistRNG
             {
                 currentBead = 0;
             }
+        }
+
+        private byte Endian(byte input)
+        {
+            var result = (byte)0;
+            var p = 1;
+            for (int i = 7; i >= 0; i--)
+            {
+                result = (byte)(result | ((input >> i) & p));
+                p *= 2;
+            }
+            return result;
         }
 
         /// <summary>

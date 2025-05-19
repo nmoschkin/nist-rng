@@ -40,7 +40,7 @@ namespace TestApp
             var nist = await NistRandom.CreateAsync();
             var ints = new List<int>();
 
-            const int count = 1_000_000;
+            const int count = 100_000;
             Console.WriteLine($"Running {count:#,##0} iterations...\r\n");
             for (var i = 0; i < count; i++)
             {
