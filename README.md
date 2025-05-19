@@ -32,7 +32,7 @@ This library supports event-driven updates, asynchronous initialization, and cus
 ```csharp
 using System;
 using System.Threading.Tasks;
-using NistRandomLib;
+using NistRNG;
 
 class Program
 {
