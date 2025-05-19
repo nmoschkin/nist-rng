@@ -113,6 +113,10 @@ namespace NistRNG
                     if (jbit == 0) break;
                     finalseed = (finalseed << jbit) ^ jostle;
                     bitsource >>= 1;
+                    if ((bitsource & 0x3) != 0 && (bitsource & 0x3) != 3)
+                    {
+                        bitsource = ((~bitsource) << (bitsource & 0x3)) ^ (bitsource ^ ((~bitsource) >> (bitsource & 0x3)));
+                    }
                 }                
                 while (finalseed < 0)
                 {
