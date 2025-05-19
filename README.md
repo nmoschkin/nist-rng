@@ -16,7 +16,7 @@ This library supports event-driven updates, asynchronous initialization, and cus
 
 ---
 
-## NistRandom Test Results (Latest Sample: 100,000 integers)
+## NistRNG Test Results (Latest Sample: 100,000 integers)
 
 | Test Name             | Result         | Notes                                              |
 |----------------------|----------------|----------------------------------------------------|
