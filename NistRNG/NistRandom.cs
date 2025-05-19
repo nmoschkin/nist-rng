@@ -33,6 +33,9 @@ namespace NistRNG
         private readonly object _lock = new();
         private readonly object _modeLock = new();
 
+        /// <summary>
+        /// Event that is triggered whenever a new beacon pulse is received from the internet.
+        /// </summary>
         public event EventHandler<BeaconPulseEventArgs> BeaconPulse;
 
         private SynchronizationContext sync = null;
