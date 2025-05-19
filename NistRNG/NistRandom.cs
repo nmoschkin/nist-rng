@@ -312,7 +312,7 @@ namespace NistRNG
             }
             if ((beads[currentBead] & 2) == 2)
             {
-                beads[currentBead] = Endian(beads[currentBead]);
+                beads[currentBead] = Discombobulate(beads[currentBead]);
             }
             beads[currentBead] = (byte)((beads[currentBead] << 1) ^ 0xff);
             currentBead++;
@@ -322,7 +322,7 @@ namespace NistRNG
             }
         }
 
-        private byte Endian(byte input)
+        private byte Discombobulate(byte input)
         {
             var result = (byte)0;
             var p = 1;
